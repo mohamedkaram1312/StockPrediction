@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analyzer</title>
+</head>
+<body>
+    <h1>Stock Price Prediction Tool</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <h3>Enter Stock Information</h3>
+            {{ form.ticker.label_tag }}
+            {{ form.ticker }}
+            <br><br>
+            
+            {{ form.start_date.label_tag }}
+            {{ form.start_date }}
+            <br><br>
+            
+            {{ form.end_date.label_tag }}
+            {{ form.end_date }}
+            <br><br>
+            
+            <button type="submit">Analyze Stock</button>
+        </div>
+    </form>
+    
+    {% if error %}
+        <div>
+            <h3>Error:</h3>
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+    
+    {% if warning %}
+        <div>
+            <h3>Warning:</h3>
+            <p>{{ warning }}</p>
+        </div>
+    {% endif %}
+    
+    {% if result %}
+        <div>
+            <h2>Analysis Results for {{ result.ticker }}</h2>
+            
+            <h3>Price Prediction:</h3>
+            <ul>
+                <li>Current Price: ${{ result.current_price }}</li>
+                <li>Predicted 15-Day Movement: {{ result.predicted_move_percent }}%</li>
+                <li>Predicted Target Price: ${{ result.predicted_target_price }}</li>
+                <li>Movement Direction: {{ result.movement_direction }} (Confidence: {{ result.confidence }}%)</li>
+                <li>Current Trend: {{ result.current_trend }} (Strength: {{ result.trend_strength }}%)</li>
+                <li>Last Updated: {{ result.last_updated }}</li>
+            </ul>
+            
+            <h3>Support/Resistance:</h3>
+            <ul>
+                <li>Nearest Support: ${{ result.support }} ({{ result.dist_to_support }}% below)</li>
+                <li>Nearest Resistance: ${{ result.resistance }} ({{ result.dist_to_resistance }}% above)</li>
+            </ul>
+            
+            <h3>Technical Indicators:</h3>
+            <ul>
+                <li>RSI (14): {{ result.rsi_14 }}</li>
+                <li>ATR (14): {{ result.atr_14 }}</li>
+                <li>BB Width (Volatility): {{ result.volatility }}</li>
+                <li>MACD: {{ result.macd }}</li>
+            </ul>
+             
+            <h3>Fibonacci Levels:</h3>
+            <ul>
+                <li>FIB 23.6%: ${{ result.fib_23 }}</li>
+                <li>FIB 38.2%: ${{ result.fib_38 }}</li>
+                <li>FIB 50.0%: ${{ result.fib_50 }}</li>
+                <li>FIB 61.8%: ${{ result.fib_61 }}</li>
+                <li>FIB 78.6%: ${{ result.fib_78 }}</li>
+                <li>Predicted Price Closest to: {{ result.closest_fib_level }} (${{ result.closest_fib_price }})</li>
+            </ul>
+            
+            <h3>Movement Probabilities:</h3>
+            <ul>
+                <li>Bearish: {{ result.bearish_prob }}%</li>
+                <li>Neutral: {{ result.neutral_prob }}%</li>
+                <li>Bullish: {{ result.bullish_prob }}%</li>
+            </ul>
+        </div>
+    {% endif %}
+</body>
+</html>
